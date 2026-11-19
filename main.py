@@ -1,4 +1,5 @@
 import json
+import time
 
 # ==========================================
 # [Step 1] 데이터 구조(2차원 리스트) & 라벨 정규화
@@ -125,26 +126,53 @@ def read_matrix_from_console(name, size=3):
 
 
 def run_user_input_mode():
-    """모드 1 전체 실행 흐름"""
+    """모드 1 전체 실행 흐름 (기본 필터 자동 적용 또는 직접 입력 선택 지원)"""
     print("\n=== 모드 1: 사용자 입력 (3×3) 시작 ===")
+    print("1. 기본 필터 사용 (A: 십자가, B: X) -> 패턴만 입력")
+    print("2. 필터 A, B 직접 입력 -> 패턴 입력")
+    sub_choice = input("필터 설정 방식을 선택하세요 (1 또는 2, 기본=1): ").strip()
 
-    filter_a = read_matrix_from_console("필터 A", size=3)
-    filter_b = read_matrix_from_console("필터 B", size=3)
+    if sub_choice == "2":
+        filter_a = read_matrix_from_console("필터 A", size=3)
+        filter_b = read_matrix_from_console("필터 B", size=3)
+        label_a, label_b = "A", "B"
+    else:
+        # 미리 정의된 3x3 십자가 필터와 X 필터 자동 적용
+        filter_a = [
+            [0.0, 1.0, 0.0],
+            [1.0, 1.0, 1.0],
+            [0.0, 1.0, 0.0],
+        ]
+        filter_b = [
+            [1.0, 0.0, 1.0],
+            [0.0, 1.0, 0.0],
+            [1.0, 0.0, 1.0],
+        ]
+        label_a, label_b = "Cross (필터 A)", "X (필터 B)"
 
     print("\n--- 필터 저장 확인 ---")
-    print_matrix(filter_a, "저장된 필터 A")
-    print_matrix(filter_b, "저장된 필터 B")
+    print_matrix(filter_a, f"저장된 {label_a}")
+    print_matrix(filter_b, f"저장된 {label_b}")
 
     pattern = read_matrix_from_console("입력 패턴", size=3)
 
+    # 단일 실행 연산 시간 측정 (ms)
+    t0 = time.perf_counter()
     score_a = mac_operation(pattern, filter_a)
     score_b = mac_operation(pattern, filter_b)
-    result = judge_pattern(score_a, score_b, label_a="A", label_b="B")
+    elapsed_ms = (time.perf_counter() - t0) * 1000.0
+
+    result = judge_pattern(score_a, score_b, label_a=label_a, label_b=label_b)
 
     print("\n--- 판정 결과 ---")
-    print(f"필터 A 점수: {score_a}")
-    print(f"필터 B 점수: {score_b}")
+    print(f"{label_a} 점수: {score_a}")
+    print(f"{label_b} 점수: {score_b}")
+    print(f"연산 시간: {elapsed_ms:.6f} ms")
     print(f"최종 판정: {result}")
+
+    # 모드 1 성능 분석(3×3) 출력
+    print_performance_table([3], iterations=10)
+
 
 
 # ==========================================
@@ -313,4 +341,4 @@ if __name__ == "__main__":
     elif choice == "2":
         run_json_analysis_mode("data.json")
     else:
-        print("잘못된 선택입니다. 1 또는 2를 입력하세요.")
+        print("잘못된 선택입니다. 1 또는 2를 입력하세요.") 
