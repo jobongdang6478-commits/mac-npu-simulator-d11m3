@@ -105,12 +105,16 @@ $$\text{MAC} = \sum_{i=0}^{N-1} \sum_{j=0}^{N-1} (I_{i,j} \times F_{i,j})$$
 ---
 
 ## 6. 실행 화면
+![모드 선택](docs/screenshot_select.png)
 
 ### 6.1 모드 1: 사용자 입력 (3×3) 실행 결과
 ![모드 1 실행 결과](docs/screenshot_mode1.png)
 
 ### 6.2 모드 2: `data.json` 일괄 판정 및 결과 요약
-![모드 2 판정 및 요약](docs/screenshot_operation.png)
+![모드 2 판정 및 요약](docs/screenshot_result.png)
 
 ### 6.3 실패 원인 
+![성능 분석 표](docs/screenshot_failure.png)
+
+### 6.4 선택 화면 
 ![성능 분석 표](docs/screenshot_failure.png)
